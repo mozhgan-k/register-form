@@ -7,12 +7,16 @@
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+.bg-primary {
+  background-color: #432DD7;
+}
+
+.text-primary {
+  color: #432DD7;
+}
+
+.text-grey{
+  color: #878585;
 }
 
 @media (hover: hover) {
@@ -21,7 +25,7 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
@@ -32,4 +36,4 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
-}
+} */
