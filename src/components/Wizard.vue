@@ -1,11 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import {ref} from 'vue';
 import IconUser from "@/components/icons/IconUser.vue";
 import IconEmail from "@/components/icons/IconEmail.vue";
 import IconUserId from "@/components/icons/IconUserId.vue";
 
+const steps = [
+  {step: 1, title: "Username", icon: IconUser},
+  {step: 2, title: "Email", icon: IconEmail},
+  {step: 3, title: "Review", icon: IconUserId},
+]
+
 // Reactive state
-const step = ref(1);
+const activeStep = ref(1);
 const username = ref('');
 const email = ref('');
 const usernameError = ref('');
@@ -26,7 +32,7 @@ const validateUsername = () => {
     usernameError.value = 'Invalid Username.';
     return;
   }
-  step.value = 2; // Move to the next step
+  activeStep.value = 2; // Move to the next step
 };
 
 const validateEmail = () => {
@@ -40,55 +46,37 @@ const validateEmail = () => {
     emailError.value = 'Invalid email address.';
     return;
   }
-  step.value = 3; // Move to the next step
+  activeStep.value = 3; // Move to the next step
 };
 
 // Navigation functions
 const prevStep = () => {
-  if (step.value > 1) {
-    step.value--;
+  if (activeStep.value > 1) {
+    activeStep.value--;
   }
 };
+
 </script>
 
 <template>
   <div>
     <div class="wrapper">
       <ol class="c-stepper">
-        <li class="c-stepper__item" :class="step === 1  ? 'text-primary' : 'text-grey'"
-            @click="step === 1"
+        <template v-for="step in steps" :key="step.step">
+        <li class="c-stepper__item" :class="activeStep >= step.step  ? 'text-primary' : 'text-grey'"
         >
-          <div class="c-stepper__icon" :class="step >= 1 ? 'active' : ''">
-            <IconUser width="24px" height="24px"/>
+          <div class="c-stepper__icon" :class="activeStep >= step.step ? 'active' : ''">
+            <Component :is="step.icon" width="24px" height="24px"/>
           </div>
           <span class="c-stepper__title">
-            Username
+            {{step.title}}
           </span>
         </li>
-        <li class="c-stepper__item" :class="step === 2  ? 'text-primary' : 'text-grey'"
-            @click="step === 2"
-        >
-          <div class="c-stepper__icon" :class="step >= 2 ? 'active' : ''">
-            <IconEmail width="24px" height="24px"/>
-          </div>
-          <span class="c-stepper__title">
-            Email
-          </span>
-        </li>
-        <li class="c-stepper__item" :class="step === 3  ? 'text-primary' : 'text-grey'"
-            @click="step === 3"
-        >
-          <div class="c-stepper__icon" :class="step >= 3 ? 'active' : ''">
-            <IconUserId width="24px" height="24px"/>
-          </div>
-          <span class="c-stepper__title">
-            Review
-          </span>
-        </li>
+        </template>
       </ol>
     </div>
     <!-- Step 1: Username -->
-    <div class="form" v-if="step === 1">
+    <div class="form" v-if="activeStep === 1">
       <h2>Username:</h2>
       <input
           id="username"
@@ -99,19 +87,19 @@ const prevStep = () => {
       />
       <p v-if="usernameError" class="error">{{ usernameError }}</p>
       <div class="form-navigation">
-        <button class="btn outlined-btn" id="btn-prev" :disabled="step === 1" @click="prevStep">Prev</button>
+        <button class="btn outlined-btn" id="btn-prev" :disabled="activeStep === 1" @click="prevStep">Prev</button>
         <button class="btn bg-primary" id="btn-next" @click="validateUsername">Next</button>
       </div>
     </div>
 
     <!-- Step 2: Email -->
-    <div class="form" v-if="step === 2">
+    <div class="form" v-if="activeStep === 2">
       <h2>Email:</h2>
       <input
           id="email"
           class="form-input"
           v-model="email"
-          type="email"
+          type="text"
           placeholder="Enter your email"
       />
       <p v-if="emailError" class="error">{{ emailError }}</p>
@@ -122,7 +110,7 @@ const prevStep = () => {
     </div>
 
     <!-- Step 3: Review -->
-    <div class="form" v-if="step === 3">
+    <div class="form" v-if="activeStep === 3">
       <h2>Step: review</h2>
       <p>Username: {{ username }}</p>
       <p>Email: {{ email }}</p>
@@ -139,13 +127,6 @@ const prevStep = () => {
 #btn-next {
   color: #fff;
   margin-left: 10px;
-}
-
-.error {
-  color: #fd1010;
-  font-size: 0.9em;
-  display: block;
-  margin-top: 5px;
 }
 
 .form-navigation {
@@ -179,8 +160,6 @@ ol {
   align-items: center;
   cursor: pointer;
 }
-
-
 
 .c-stepper__item:not(:last-child) {
   flex: 1;
