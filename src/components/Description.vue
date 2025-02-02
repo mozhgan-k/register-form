@@ -19,7 +19,7 @@ export default {
     return {
       inputText: '',
       message: '',
-      debounceTimeout: null,
+      debounceTimeout: null, // add debounce to fix multiple call checkBalance()
     };
   },
   methods: {
