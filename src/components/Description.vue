@@ -1,47 +1,62 @@
-<script setup lang="ts">
-import {ref} from "vue";
-
-const inputText = ref('')
-const isBalancedResult = ref(null)
-const balancedMessage = ref('The text is balanced.')
-const unbalancedMessage = ref('The text is not balanced.')
-
-const checkBalance = () => {
-  isBalancedResult.value = isBalanced(inputText.value);
-}
-const isBalanced = (text: string) => {
-  const stack = [];
-  const pairs = {
-    '(': ')',
-    '[': ']',
-    '{': '}',
-  };
-
-  for (let char of text) {
-    if (pairs[char]) {
-      stack.push(char);
-    } else if (char === ')' || char === ']' || char === '}') {
-      if (pairs[stack.pop()] !== char) {
-        return false;
-      }
-    }
-  }
-
-  return stack.length === 0;
-}
-</script>
-
 <template>
   <div>
     <input
         id="description"
+        type="text"
         v-model="inputText"
+        @input="debouncedCheckBalance"
         class="form-input"
-        @input="checkBalance"
         placeholder="Enter text"
     />
-    <p v-if="isBalancedResult !== null">
-      {{ isBalancedResult ? balancedMessage : unbalancedMessage }}
-    </p>
+    <p class="error">{{ message }}</p>
   </div>
 </template>
+
+<script>
+/* USE OPTION API BASED ON DESCRIPTION TEST FILE */
+export default {
+  data() {
+    return {
+      inputText: '',
+      message: '',
+      debounceTimeout: null,
+    };
+  },
+  methods: {
+    debouncedCheckBalance() {
+      // Clear the previous timeout
+      if (this.debounceTimeout) {
+        clearTimeout(this.debounceTimeout);
+      }
+      // Set a new timeout to call checkBalance after 300ms
+      this.debounceTimeout = setTimeout(() => {
+        this.checkBalance();
+      }, 300);
+    },
+    checkBalance() {
+      this.message = this.isBalanced(this.inputText)
+          ? 'The text is balanced.'
+          : 'The text is not balanced.';
+    },
+    isBalanced(text) {
+      const stack = [];
+      const pairs = {
+        '(': ')',
+        '[': ']',
+        '{': '}',
+      };
+
+      for (let char of text) {
+        if (pairs[char]) {
+          stack.push(char);
+        } else if (char === ')' || char === ']' || char === '}') {
+          if (pairs[stack.pop()] !== char) {
+            return false;
+          }
+        }
+      }
+      return stack.length === 0;
+    },
+  },
+};
+</script>
