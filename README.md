@@ -7,25 +7,25 @@ More than simply passing the tests, it is crucial to first deeply understand the
 ## Project Setup
 
 ```sh
-npm install
+yarn install
 ```
 
 ### Compile and Hot-Reload for Development
 
 ```sh
-npm run dev
+yarn dev
 ```
 
 ### Cypress Component Testing
 
 ```sh
-npm run test:unit:dev # or `npm run test:unit` for headless testing
+yarn test:unit:dev # or `yarn test:unit` for headless testing
 ```
 
 ### Run Headed Component Tests with [Cypress Component Testing](https://on.cypress.io/component)
 
 ```sh
-npm run test:unit # or `npm run test:unit` for headless testing
+yarn test:unit # or `yarn test:unit` for headless testing
 ```
 
 ## Request Overview
